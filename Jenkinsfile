@@ -19,8 +19,8 @@ pipeline {
 			steps {
                 script {
 					component.each{ entry ->
-						stage ("${entry.key} Push"){
-							if(entry.value){
+						stage ("${entry.key}"){
+							if (entry.value){
 								var = entry.key
 								withCredentials([[$class: 'UsernamePasswordMultiBinding',
 								credentialsId: 'docker_credentials',
