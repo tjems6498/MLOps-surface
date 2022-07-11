@@ -88,13 +88,13 @@ def build_dataset(data_path, img_size, batch_size, mean_std):
     test_dataset = datasets.ImageFolder(f'{data_path}/dataset/test', transform=Transforms(img_size, mean_std, 'test'))
 
     train_loader = DataLoader(train_dataset, batch_size,
-                              num_workers=0, pin_memory=True, shuffle=True, drop_last=False)
+                              num_workers=2, pin_memory=True, shuffle=True, drop_last=False)
 
     val_loader = DataLoader(val_dataset, batch_size,
-                            num_workers=0, pin_memory=True, shuffle=False, drop_last=False)
+                            num_workers=2, pin_memory=True, shuffle=False, drop_last=False)
 
     test_loader = DataLoader(test_dataset, batch_size,
-                             num_workers=0, pin_memory=True, shuffle=False, drop_last=False)
+                             num_workers=2, pin_memory=True, shuffle=False, drop_last=False)
 
     return train_loader, val_loader, test_loader
 

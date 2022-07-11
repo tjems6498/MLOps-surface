@@ -84,7 +84,7 @@ def surface_pipeline(PREPROCESS_yes_no: str,
 
     pvc_name = "workspace-surface"
     volume_name = 'pipeline'
-    volume_mount_path = '/home/jovyan'
+    volume_mount_path = '/home/jeff'
 
     with dsl.Condition(PREPROCESS_yes_no == 'yes'):
         _preprocess_op = preprocess_op(
