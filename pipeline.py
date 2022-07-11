@@ -2,25 +2,30 @@ import kfp
 from kfp import dsl
 from kfp import onprem
 # TODO: dataloader num_workers 값을 주었을때 shm 문제해결
+import kubernetes as k8s
 
 def preprocess_op(pvc_name, volume_name, volume_mount_path):
 
     return dsl.ContainerOp(
         name='Preprocess Data',
-        image='tjems6498/surface_pipeline_preprocess:1',
+        image='tjems6498/surface_pipeline_preprocess:2',
         arguments=['--data-path', volume_mount_path,
                    '--img-size', 224],
-    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path))
+    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)
+            )
 
 def hyp_op(pvc_name, volume_name, volume_mount_path, count, device):
 
     return dsl.ContainerOp(
         name='Hyperparameter Tuning',
-        image='tjems6498/surface_pipeline_hyper:1',
+        image='tjems6498/surface_pipeline_hyper:2',
         arguments=['--data-path', volume_mount_path,
                     '--count', count,
                     '--device', device],
-    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path))
+    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)
+            ).add_pvolumes({'/dev/shm': dsl.PipelineVolume(volume=k8s.client.V1Volume(
+        name="shm",
+        empty_dir=k8s.client.V1EmptyDirVolumeSource(medium='Memory', size_limit='256M')))})
 
 def train_op(pvc_name, volume_name, volume_mount_path, repo_name, epoch, img_size, batch_size, learning_rate, optimizer, device):
 

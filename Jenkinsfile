@@ -1,10 +1,10 @@
 def component = [
 		Base: true,
-		Preprocess: true,
+		Preprocess: false,
 		Hyper: true,
-		Train: true,
-		Test: true,
-		Serve: true
+		Train: false,
+		Test: false,
+		Serve: false
 ]
 
 pipeline {
