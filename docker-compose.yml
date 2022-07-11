@@ -16,7 +16,7 @@ services:
   test:
     build: ./test
     container_name: surface-test
-  Serve:
+  serve:
     build: ./serve
     container_name: surface-serve
   
