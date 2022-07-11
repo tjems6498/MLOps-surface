@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  base:
+    build: .
+    container_name: surface-base
+  preprocess:
+    build: ./preprocess
+    container_name: surface-preprocess
+  hyper:
+    build: ./hyper-tuning
+    container_name: surface-hyper
+  train:
+    build: ./train
+    container_name: surface-train
+  test:
+    build: ./test
+    container_name: surface-test
+  Serve:
+    build: ./serve
+    container_name: surface-serve
+  

@@ -1,0 +1,7 @@
+# 적용 안될 때: git rm -r --cached .
+*.yaml
+/raw_data
+/.idea
+/.DS_Store
+/inference.py
+/*/__pycache__
