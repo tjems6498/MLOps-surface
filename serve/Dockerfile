@@ -1,8 +1,9 @@
-FROM tjems6498/surface_pipeline_base:3 AS builder
+FROM pytorch/pytorch:latest
 
 RUN pip install -U mlflow boto3 bentoml protobuf~=3.19.0
+RUN mkdir -p /app
 
-ADD . /app/
+COPY . /app/
 
 WORKDIR /app
 ENTRYPOINT ["python", "bento_packer.py" ]
