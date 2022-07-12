@@ -101,7 +101,7 @@ def main(opt, device):
             torch.save(model.state_dict(), f'{opt.data_path}/weight/best.pth')
             best_accuracy = accuracy
     end = time.time()
-    print(f'TRAIN TIME: {end-start:.3f}')
+    print(f'TRAIN TIME: {end-start:.3f}s')
 
 
 def upload_model_to_mlflow(opt, device):
@@ -119,13 +119,13 @@ def upload_model_to_mlflow(opt, device):
 
     save_model(
         pytorch_model=model,
-        path=opt.model_name,
+        path=opt.repo_name,
         conda_env=conda_env,
     )
 
     tags = {"DeepLearning": "surface crack classification"}
     run = client.create_run(experiment_id="2", tags=tags)
-    client.log_artifact(run.info.run_id, opt.model_name)
+    client.log_artifact(run.info.run_id, opt.repo_name)
 
 
 if __name__ == '__main__':
