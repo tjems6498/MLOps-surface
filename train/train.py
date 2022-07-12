@@ -8,7 +8,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from mlflow.pytorch import save_model
 from mlflow.tracking.client import MlflowClient
 from util import seed_everything, MetricMonitor, build_dataset, build_optimizer
-
+import time
 
 class ConvNeXt(nn.Module):
     def __init__(self, num_classes, pretrained=True):
@@ -90,6 +90,7 @@ def main(opt, device):
                                   last_epoch=-1)
 
     best_accuracy = 0
+    start = time.time()
     for epoch in range(1, opt.epoch + 1):
         train_epoch(train_loader, epoch, model, optimizer, criterion, device)
         accuracy = val_epoch(val_loader, epoch, model, criterion, device)
@@ -99,6 +100,8 @@ def main(opt, device):
             os.makedirs(f'{opt.data_path}/weight', exist_ok=True)
             torch.save(model.state_dict(), f'{opt.data_path}/weight/best.pth')
             best_accuracy = accuracy
+    end = time.time()
+    print(f'TRAIN TIME: {end-start:.3f}')
 
 
 def upload_model_to_mlflow(opt, device):

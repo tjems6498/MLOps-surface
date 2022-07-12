@@ -18,7 +18,7 @@ def hyp_op(pvc_name, volume_name, volume_mount_path, count, device):
 
     return dsl.ContainerOp(
         name='Hyperparameter Tuning',
-        image='tjems6498/surface_pipeline_hyper:2',
+        image='tjems6498/surface_pipeline_hyper:3',
         arguments=['--data-path', volume_mount_path,
                     '--count', count,
                     '--device', device],
