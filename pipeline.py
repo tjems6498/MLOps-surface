@@ -11,8 +11,7 @@ def preprocess_op(pvc_name, volume_name, volume_mount_path):
         image='tjems6498/surface_pipeline_preprocess:2',
         arguments=['--data-path', volume_mount_path,
                    '--img-size', 224],
-    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)
-            )
+    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path))
 
 def hyp_op(pvc_name, volume_name, volume_mount_path, count, device):
 
@@ -49,14 +48,17 @@ def test_op(pvc_name, volume_name, volume_mount_path, img_size, batch_size, mode
 
     return dsl.ContainerOp(
         name='Test Model',
-        image='tjems6498/surface_pipeline_test:1',
+        image='tjems6498/surface_pipeline_test:10',
         arguments=['--data-path', volume_mount_path,
                    '--img-size', img_size,
                    '--batch-size', batch_size,
                    '--model-name', model_name,
                    '--model-version', model_version,
                    '--device', device]
-    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)).set_gpu_limit(4)
+    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)
+            ).set_gpu_limit(4).add_pvolumes({'/dev/shm': dsl.PipelineVolume(volume=k8s.client.V1Volume(
+        name="shm",
+        empty_dir=k8s.client.V1EmptyDirVolumeSource(medium='Memory', size_limit='256M')))})
 
 def serve_op(pvc_name, volume_name, volume_mount_path, model_name, model_version):
 

@@ -1,8 +1,7 @@
-import torch
 import os
 import mlflow
 from mlflow.tracking import MlflowClient
-import pdb
+
 
 def load_model(model_name, version):
     os.environ["AWS_ACCESS_KEY_ID"] = "minio"
@@ -28,6 +27,8 @@ def load_model(model_name, version):
 
 
 if __name__ == '__main__':
+    import torch
+    import pdb
     model = load_model(model_name='Random-Forest', version=1)
 
     # sample = torch.rand((1, 3, 224, 224))
