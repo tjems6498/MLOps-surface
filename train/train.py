@@ -124,7 +124,8 @@ def upload_model_to_mlflow(opt, device):
     )
 
     tags = {"DeepLearning": "surface crack classification"}
-    run = client.create_run(experiment_id="2", tags=tags)
+    experiment_id = client.create_experiment("surface experiments")
+    run = client.create_run(experiment_id=experiment_id, tags=tags)
     client.log_artifact(run.info.run_id, opt.repo_name)
 
 

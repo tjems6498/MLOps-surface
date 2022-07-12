@@ -31,7 +31,7 @@ def train_op(pvc_name, volume_name, volume_mount_path, repo_name, epoch, img_siz
 
     return dsl.ContainerOp(
         name='Train Model',
-        image='tjems6498/surface_pipeline_train:6',
+        image='tjems6498/surface_pipeline_train:7',
         arguments=['--data-path', volume_mount_path,
                     '--repo-name', repo_name,
                     '--epoch', epoch,
