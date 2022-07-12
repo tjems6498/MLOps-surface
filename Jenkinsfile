@@ -2,8 +2,8 @@ def component = [
 		Base: false,
 		Preprocess: false,
 		Hyper: false,
-		Train: true,
-		Test: false,
+		Train: false,
+		Test: true,
 		Serve: false
 ]
 

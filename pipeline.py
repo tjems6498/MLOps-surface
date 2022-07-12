@@ -31,7 +31,7 @@ def train_op(pvc_name, volume_name, volume_mount_path, repo_name, epoch, img_siz
 
     return dsl.ContainerOp(
         name='Train Model',
-        image='tjems6498/surface_pipeline_train:8',
+        image='tjems6498/surface_pipeline_train:9',
         arguments=['--data-path', volume_mount_path,
                     '--repo-name', repo_name,
                     '--epoch', epoch,
@@ -45,7 +45,7 @@ def train_op(pvc_name, volume_name, volume_mount_path, repo_name, epoch, img_siz
         name="shm",
         empty_dir=k8s.client.V1EmptyDirVolumeSource(medium='Memory', size_limit='256M')))})
 
-def test_op(pvc_name, volume_name, volume_mount_path, img_size, batch_size, model_s3url, device):
+def test_op(pvc_name, volume_name, volume_mount_path, img_size, batch_size, model_name, model_version, device):
 
     return dsl.ContainerOp(
         name='Test Model',
@@ -53,18 +53,19 @@ def test_op(pvc_name, volume_name, volume_mount_path, img_size, batch_size, mode
         arguments=['--data-path', volume_mount_path,
                    '--img-size', img_size,
                    '--batch-size', batch_size,
-                   '--model-s3url', model_s3url,
+                   '--model-name', model_name,
+                   '--model-version', model_version,
                    '--device', device]
     ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)).set_gpu_limit(4)
 
-def bento_op(pvc_name, volume_name, volume_mount_path, model_name, model_version):
+def serve_op(pvc_name, volume_name, volume_mount_path, model_name, model_version):
 
     return dsl.ContainerOp(
         name='Bento packing',
         image='tjems6498/surface_pipeline_serve:1',
         arguments=['--data-path', volume_mount_path,
                    '--model-name', model_name,
-                   '--version', model_version],
+                   '--model-version', model_version],
     ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path))
 
 
@@ -83,7 +84,8 @@ def surface_pipeline(PREPROCESS_yes_no: str,
                     TRAIN_batch_size: int,
                     TRAIN_learning_rate: float,
                     TRAIN_optimizer: str,
-                    TEST_model_s3url: str,
+                    TEST_model_name: str,
+                    TEST_model_version: int,
                     TEST_img_size: int,
                     TEST_batch_size: int,
                     SERVE_model_name: str,
@@ -131,12 +133,13 @@ def surface_pipeline(PREPROCESS_yes_no: str,
             volume_mount_path = volume_mount_path,
             img_size = TEST_img_size,
             batch_size= TEST_batch_size,
-            model_s3url = TEST_model_s3url, 
+            model_name = TEST_model_name,
+            model_version= TEST_model_version,
             device = DEVICE
         ).after(_preprocess_op)
 
     with dsl.Condition(MODE_hyp_train_test_serve == 'serve'):
-        _bento_op = bento_op(
+        _serve_op = serve_op(
             pvc_name = pvc_name, 
             volume_name = volume_name, 
             volume_mount_path = volume_mount_path,

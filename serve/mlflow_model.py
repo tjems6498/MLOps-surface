@@ -13,14 +13,15 @@ def load_model(model_name, version):
     os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://116.47.188.227:31968"
     client = MlflowClient("http://116.47.188.227:30842")
 
-    filter_string = "name='{}'".format(model_name)
+    filter_string = f"name='{model_name}'"
     results = client.search_model_versions(filter_string)  # 버전별로 따로 나옴
+
 
     for res in results:
         if res.version == str(version):
             model_uri = res.source
             break
-    print(results)
+    print(model_uri)
     reconstructed_model = mlflow.pytorch.load_model(model_uri)
     return reconstructed_model
 
@@ -29,6 +30,6 @@ def load_model(model_name, version):
 if __name__ == '__main__':
     model = load_model(model_name='Random-Forest', version=1)
 
-    sample = torch.rand((1, 3, 224, 224))
-    output = model(sample)
-    print(output)
+    # sample = torch.rand((1, 3, 224, 224))
+    # output = model(sample)
+    # print(output)

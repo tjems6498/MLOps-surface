@@ -3,7 +3,9 @@ import os
 from tqdm import tqdm
 import torch
 import torch.nn as nn
+from mlflow.tracking import MlflowClient
 import mlflow
+
 from util import seed_everything, MetricMonitor, build_dataset
 
 
@@ -32,18 +34,27 @@ def test(test_loader, model, criterion, device):
 
 
 def main(opt, device):
-    mlflow.set_tracking_uri("http://mlflow-server-service.mlflow-system.svc:5000")
-    os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://minio-service.kubeflow.svc:9000"
-    os.environ["AWS_ACCESS_KEY_ID"] = "minio"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "minio123"
-
     with open(f'{opt.data_path}/mean-std.txt', 'r') as f:
         cc = f.readlines()
         mean_std = list(map(lambda x: x.strip('\n'), cc))
 
+    os.environ["AWS_ACCESS_KEY_ID"] = "minio"
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "minio123"
+    os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://minio-service.kubeflow.svc:9000"
+    client = MlflowClient("http://mlflow-server-service.mlflow-system.svc:5000")
 
-    model = mlflow.pytorch.load_model(opt.model_s3url)
+    filter_string = f"name='{opt.model_name}'"
+    results = client.search_model_versions(filter_string)  # 버전별로 따로 나옴
+
+    for res in results:
+        if res.version == str(opt.model_version):
+            model_uri = res.source
+            break
+
+
+    model = mlflow.pytorch.load_model(model_uri)
     model.to(device)
+
 
     _, _, test_loader = build_dataset(opt.data_path, opt.img_size, opt.batch_size, mean_std)
     criterion = nn.CrossEntropyLoss()
@@ -56,7 +67,8 @@ if __name__ == '__main__':
     parser.add_argument('--data-path', type=str, help='dataset root path')
     parser.add_argument('--img-size', type=int, help='resize img size')
     parser.add_argument('--batch-size', type=int, help='test batch size')
-    parser.add_argument('--model-s3url', type=str, help='model s3 url in mlflow, i,e. s3://~')
+    parser.add_argument('--model-name', type=str, help='name of model')
+    parser.add_argument('--model-version', type=int, help='version of model')
     parser.add_argument('--device', type=str, help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
 
     opt = parser.parse_args()
