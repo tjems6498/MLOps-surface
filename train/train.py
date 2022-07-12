@@ -123,8 +123,15 @@ def upload_model_to_mlflow(opt, device):
         conda_env=conda_env,
     )
 
+    experiment_name = "surface experiments"
+    current_experiment = client.get_experiment_by_name(experiment_name)
+
+    if current_experiment:
+        experiment_id = dict(current_experiment)['experiment_id']
+    else:
+        experiment_id = client.create_experiment(experiment_name)
+
     tags = {"DeepLearning": "surface crack classification"}
-    experiment_id = client.create_experiment("surface experiments")
     run = client.create_run(experiment_id=experiment_id, tags=tags)
     client.log_artifact(run.info.run_id, opt.repo_name)
 
