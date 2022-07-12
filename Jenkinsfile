@@ -3,8 +3,8 @@ def component = [
 		Preprocess: false,
 		Hyper: false,
 		Train: false,
-		Test: true,
-		Serve: false
+		Test: false,
+		Serve: true
 ]
 
 pipeline {
