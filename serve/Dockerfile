@@ -1,6 +1,6 @@
 FROM pytorch/pytorch:latest
 
-RUN apt-get -y update && apt-get install -y libzbar-dev
+RUN apt-get -y update && apt-get install -y libzbar-dev timm
 RUN pip install -U mlflow boto3 protobuf~=3.19.0 bentoml
 RUN mkdir -p /app
 
