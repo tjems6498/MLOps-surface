@@ -22,7 +22,7 @@ def hyp_op(pvc_name, volume_name, volume_mount_path, count, device):
         arguments=['--data-path', volume_mount_path,
                     '--count', count,
                     '--device', device],
-    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)
+    ).set_gpu_limit(4).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)
             ).add_pvolumes({'/dev/shm': dsl.PipelineVolume(volume=k8s.client.V1Volume(
         name="shm",
         empty_dir=k8s.client.V1EmptyDirVolumeSource(medium='Memory', size_limit='256M')))})
@@ -31,7 +31,7 @@ def train_op(pvc_name, volume_name, volume_mount_path, repo_name, epoch, img_siz
 
     return dsl.ContainerOp(
         name='Train Model',
-        image='tjems6498/surface_pipeline_train:1',
+        image='tjems6498/surface_pipeline_train:4',
         arguments=['--data-path', volume_mount_path,
                     '--repo-name', repo_name,
                     '--epoch', epoch,
@@ -40,7 +40,10 @@ def train_op(pvc_name, volume_name, volume_mount_path, repo_name, epoch, img_siz
                     '--learning-rate', learning_rate,
                     '--optimizer', optimizer,
                     '--device', device]
-    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)).set_gpu_limit(4)
+    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path)
+            ).set_gpu_limit(4).add_pvolumes({'/dev/shm': dsl.PipelineVolume(volume=k8s.client.V1Volume(
+        name="shm",
+        empty_dir=k8s.client.V1EmptyDirVolumeSource(medium='Memory', size_limit='256M')))})
 
 def test_op(pvc_name, volume_name, volume_mount_path, img_size, batch_size, model_s3url, device):
 
