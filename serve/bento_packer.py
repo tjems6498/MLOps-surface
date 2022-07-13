@@ -3,6 +3,7 @@ import os
 import shutil
 from bento_service import SurfaceClassification
 from mlflow_model import load_model
+from bentoml.yatai.client import get_yatai_client
 
 
 def bento_serve(opt):
@@ -12,6 +13,14 @@ def bento_serve(opt):
     surface_classifier_service.pack('pytorch_model', model)
 
     saved_path = surface_classifier_service.save()
+
+    remote_yatai_client = get_yatai_client('http://remote.yatai.service:50050')
+    bento_name = f'{surface_classifier_service.name}:{surface_classifier_service.version}'
+    remote_saved_path = remote_yatai_client.repository.push(bento_name)
+
+    while 1:
+        True
+
 
     # os.makedirs(os.path.join(opt.data_path, "serve"), exist_ok=True)
     # shutil.move(saved_path, os.path.join(opt.data_path, "serve"))
@@ -26,5 +35,4 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     bento_serve(opt)
-    while 1:
-        True
+
