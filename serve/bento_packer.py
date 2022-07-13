@@ -13,8 +13,8 @@ def bento_serve(opt):
 
     saved_path = surface_classifier_service.save()
 
-    os.makedirs(os.path.join(opt.data_path, "serve"), exist_ok=True)
-    shutil.move(saved_path, os.path.join(opt.data_path, "serve"))
+    # os.makedirs(os.path.join(opt.data_path, "serve"), exist_ok=True)
+    # shutil.move(saved_path, os.path.join(opt.data_path, "serve"))
 
 
 
