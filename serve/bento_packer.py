@@ -26,6 +26,5 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     bento_serve(opt)
-
     while 1:
         True

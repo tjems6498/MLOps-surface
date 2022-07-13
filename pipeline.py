@@ -130,7 +130,7 @@ def surface_pipeline(PREPROCESS_yes_no: str,
 
     with dsl.Condition(MODE_hyp_train_test_serve == 'test'):
         _test_op = test_op(
-            pvc_name = pvc_name, 
+            pvc_name = pvc_name,
             volume_name = volume_name, 
             volume_mount_path = volume_mount_path,
             img_size = TEST_img_size,
@@ -142,11 +142,11 @@ def surface_pipeline(PREPROCESS_yes_no: str,
 
     with dsl.Condition(MODE_hyp_train_test_serve == 'serve'):
         _serve_op = serve_op(
-            pvc_name = pvc_name, 
-            volume_name = volume_name, 
-            volume_mount_path = volume_mount_path,
-            model_name = SERVE_model_name,
-            model_version= SERVE_model_version
+            pvc_name=pvc_name,
+            volume_name=volume_name,
+            volume_mount_path=volume_mount_path,
+            model_name=SERVE_model_name,
+            model_version=SERVE_model_version
         ).after(_test_op)
 
 
