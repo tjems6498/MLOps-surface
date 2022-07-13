@@ -64,7 +64,7 @@ def serve_op(pvc_name, volume_name, volume_mount_path, model_name, model_version
 
     return dsl.ContainerOp(
         name='Bento packing',
-        image='tjems6498/surface_pipeline_serve:29',
+        image='tjems6498/surface_pipeline_serve:30',
         arguments=['--data-path', volume_mount_path,
                    '--model-name', model_name,
                    '--model-version', model_version],

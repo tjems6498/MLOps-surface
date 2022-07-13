@@ -14,7 +14,7 @@ def bento_serve(opt):
 
     saved_path = surface_classifier_service.save()
 
-    remote_yatai_client = get_yatai_client('http://remote.yatai.service:50050')
+    remote_yatai_client = get_yatai_client('http://116.47.188.227:30080')
     bento_name = f'{surface_classifier_service.name}:{surface_classifier_service.version}'
     remote_saved_path = remote_yatai_client.repository.push(bento_name)
 
