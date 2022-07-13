@@ -17,6 +17,7 @@ def bento_serve(opt):
     shutil.move(saved_path, os.path.join(opt.data_path, "serve"))
 
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data-path', type=str, help='dataset root path')
@@ -25,3 +26,6 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     bento_serve(opt)
+
+    while 1:
+        True

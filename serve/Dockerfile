@@ -8,3 +8,4 @@ COPY . /app/
 
 WORKDIR /app
 ENTRYPOINT ["python", "bento_packer.py" ]
+ENTRYPOINT ["bentoml", "containerize", "SurfaceClassification:latest", "-t", "tjems6498/surface_deploy:latest"]
