@@ -1,7 +1,8 @@
 #!/bin/bash
 
 TOKEN=$1
+URL=$2
 
-bentoml yatai login --api-token $TOKEN --endpoint=http://116.47.188.227:30080
+bentoml yatai login --api-token $TOKEN --endpoint $URL
 bentoml build
 bentoml push surface_clf:latest
