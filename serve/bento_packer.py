@@ -17,7 +17,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-name', type=str, help='MLflow model name')
     parser.add_argument('--model-version', type=int, help='MLFlow model version')
-    parser.add_argument('--api-token', type=int, help='MLFlow model version')
+    parser.add_argument('--api-token', type=str, help='MLFlow model version')
     opt = parser.parse_args()
 
     subprocess.run(["./bento_command.sh", opt.api_token], shell=True)
