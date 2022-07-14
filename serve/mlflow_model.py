@@ -20,6 +20,7 @@ def load_model(model_name, version):
         if res.version == str(version):
             model_uri = res.source
             break
+
     reconstructed_model = mlflow.pytorch.load_model(model_uri)
     return reconstructed_model
 
@@ -28,7 +29,9 @@ def load_model(model_name, version):
 if __name__ == '__main__':
     import torch
     import pdb
-    model = load_model(model_name='Random-Forest', version=1)
+    import bentoml
+    model = load_model(model_name='surface', version=2)
+    bentoml.pytorch.save_model("surface_clf", model)
 
     # sample = torch.rand((1, 3, 224, 224))
     # output = model(sample)

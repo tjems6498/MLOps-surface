@@ -60,15 +60,15 @@ def test_op(pvc_name, volume_name, volume_mount_path, img_size, batch_size, mode
         name="shm",
         empty_dir=k8s.client.V1EmptyDirVolumeSource(medium='Memory', size_limit='256M')))})
 
-def serve_op(pvc_name, volume_name, volume_mount_path, model_name, model_version):
+def serve_op(model_name, model_version, api_token):
 
     return dsl.ContainerOp(
         name='Bento packing',
-        image='tjems6498/surface_pipeline_serve:30',
-        arguments=['--data-path', volume_mount_path,
-                   '--model-name', model_name,
-                   '--model-version', model_version],
-    ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path))
+        image='tjems6498/surface_pipeline_serve:31',
+        arguments=['--model-name', model_name,
+                   '--model-version', model_version,
+                   '--api-token', api_token],
+    )
 
 
 
@@ -91,7 +91,8 @@ def surface_pipeline(PREPROCESS_yes_no: str,
                     TEST_img_size: int,
                     TEST_batch_size: int,
                     SERVE_model_name: str,
-                    SERVE_model_version: int
+                    SERVE_model_version: int,
+                    SERVE_api_token: str
 ):
 
     pvc_name = "workspace-surface"
@@ -142,11 +143,9 @@ def surface_pipeline(PREPROCESS_yes_no: str,
 
     with dsl.Condition(MODE_hyp_train_test_serve == 'serve'):
         _serve_op = serve_op(
-            pvc_name=pvc_name,
-            volume_name=volume_name,
-            volume_mount_path=volume_mount_path,
             model_name=SERVE_model_name,
-            model_version=SERVE_model_version
+            model_version=SERVE_model_version,
+            api_token=SERVE_api_token
         ).after(_test_op)
 
 

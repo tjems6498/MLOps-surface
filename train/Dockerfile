@@ -1,6 +1,6 @@
 FROM tjems6498/surface_pipeline_base:3 AS builder
 
-RUN pip install -U numpy albumentations tqdm timm mlflow boto3
+RUN pip install -U numpy albumentations tqdm timm mlflow boto3 albumentations
 
 ADD . /app/
 
