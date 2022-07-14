@@ -22,6 +22,5 @@ if __name__ == '__main__':
 
 
     bento_serve(opt)
-
     subprocess.run(["chmod", "+x", "bento_command.sh"])
     subprocess.run(["./bento_command.sh", opt.api_token], shell=True)

@@ -1,0 +1,13 @@
+# bentofile.yaml
+service: "service.py:svc"  # A convention for locating your service: <YOUR_SERVICE_PY>:<YOUR_SERVICE_ANNOTATION>
+labels:
+    owner: jeff
+    stage: demo
+include:
+    - "*.py"  # A pattern for matching which files to include in the bento
+python:
+    packages:  # Additional libraries to be included in the bento
+        - torch
+        - pillow
+        - numpy
+        - albumentations

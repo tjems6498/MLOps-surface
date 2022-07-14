@@ -1,5 +1,6 @@
 # 적용 안될 때: git rm -r --cached .
-*.yaml
+deploy.yaml
+surface.yaml
 /raw_data
 /.idea
 /.DS_Store

@@ -64,7 +64,7 @@ def serve_op(model_name, model_version, api_token):
 
     return dsl.ContainerOp(
         name='Bento packing',
-        image='tjems6498/surface_pipeline_serve:34',
+        image='tjems6498/surface_pipeline_serve:35',
         arguments=['--model-name', model_name,
                    '--model-version', model_version,
                    '--api-token', api_token],
