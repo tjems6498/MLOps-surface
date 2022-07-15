@@ -7,4 +7,4 @@ RUN mkdir -p /app
 COPY . /app/
 
 WORKDIR /app
-ENTRYPOINT ["python", "bento_packer.py" ]
+ENTRYPOINT ["python", "bento_push.py" ]
