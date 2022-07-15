@@ -8,6 +8,7 @@ include:
 python:
     packages:  # Additional libraries to be included in the bento
         - torch
+        - torchvision
         - pillow
         - numpy
         - albumentations
