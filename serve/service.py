@@ -14,15 +14,17 @@ SURFACE_CLASSES = ['negatieve', 'positive']
 
 
 surface_clf_runner = bentoml.pytorch.get("surface_clf:latest").to_runner()
+
 svc = bentoml.Service("surface_convnext", runners=[surface_clf_runner])
 
 @svc.api(input=Image(), output=NumpyNdarray())
-def classify(imgs):
+async def classify(imgs):
     # inference preprocess
     imgs = np.array(imgs)
     imgs = transform(image=imgs)['image']
     imgs = imgs.unsqueeze(0)
-    print("heyhey:", imgs.shape)
-    result = surface_clf_runner.run(imgs.clone())
+    print("hey:", imgs.shape)
+    result = await surface_clf_runner.async_run(imgs)
+    print(np.array([SURFACE_CLASSES[i] for i in torch.argmax(result, dim=1).tolist()]))
     return np.array([SURFACE_CLASSES[i] for i in torch.argmax(result, dim=1).tolist()])
 
