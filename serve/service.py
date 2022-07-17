@@ -22,7 +22,7 @@ def classify(imgs):
     imgs = np.array(imgs)
     imgs = transform(image=imgs)['image']
     imgs = imgs.unsqueeze(0)
-    print("heyheyheyheyheyheyhey:", imgs.shape)
+    print("heyhey:", imgs.shape)
     result = surface_clf_runner.run(imgs.detach())
     return np.array([SURFACE_CLASSES[i] for i in torch.argmax(result, dim=1).tolist()])
 
