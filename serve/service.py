@@ -23,7 +23,8 @@ async def classify(imgs):
     imgs = np.array(imgs)
     imgs = transform(image=imgs)['image']
     imgs = imgs.unsqueeze(0)
-    print("hey:", imgs.shape)
+    imgs.requires_grad = True
+    print("hey:", imgs.requires_grad)
     result = await surface_clf_runner.async_run(imgs)
     print(np.array([SURFACE_CLASSES[i] for i in torch.argmax(result, dim=1).tolist()]))
     return np.array([SURFACE_CLASSES[i] for i in torch.argmax(result, dim=1).tolist()])
