@@ -12,7 +12,7 @@ def bento_serve(opt):
     for param in model.parameters():
         param.requires_grad = False
 
-    bentoml.pytorch.save_model("surface_clff", model)
+    bentoml.pytorch.save_model("surface_classifier", model)
 
 
 
