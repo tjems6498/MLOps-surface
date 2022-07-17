@@ -9,7 +9,11 @@ import bentoml
 
 def bento_serve(opt):
     model = load_model(model_name=opt.model_name, version=opt.model_version)
-    bentoml.pytorch.save_model("surface_clf", model)
+    for param in model.parameters():
+        param.requires_grad = False
+
+    bentoml.pytorch.save_model("surface_clff", model)
+
 
 
 

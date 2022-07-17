@@ -13,9 +13,9 @@ transform = A.Compose([
 SURFACE_CLASSES = ['negatieve', 'positive']
 
 
-surface_clf_runner = bentoml.pytorch.get("surface_clf:latest").to_runner()
+surface_clf_runner = bentoml.pytorch.get("surface_clff:latest").to_runner()
 
-svc = bentoml.Service("surface_convnext", runners=[surface_clf_runner])
+svc = bentoml.Service("surface_conv", runners=[surface_clf_runner])
 
 @svc.api(input=Image(), output=NumpyNdarray())
 async def classify(imgs):
@@ -23,7 +23,6 @@ async def classify(imgs):
     imgs = np.array(imgs)
     imgs = transform(image=imgs)['image']
     imgs = imgs.unsqueeze(0)
-    imgs.requires_grad = True
     print("hey:", imgs.requires_grad)
     result = await surface_clf_runner.async_run(imgs)
     print(np.array([SURFACE_CLASSES[i] for i in torch.argmax(result, dim=1).tolist()]))

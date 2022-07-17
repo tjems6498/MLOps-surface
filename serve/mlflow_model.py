@@ -10,6 +10,9 @@ def load_model(model_name, version):
     client = MlflowClient("http://mlflow-server-service.mlflow-system.svc:5000")
 
 
+    # os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://116.47.188.227:31968"
+    # client = MlflowClient("http://116.47.188.227:30842")
+
     filter_string = f"name='{model_name}'"
     results = client.search_model_versions(filter_string)  # 버전별로 따로 나옴
 
@@ -29,7 +32,11 @@ if __name__ == '__main__':
     import pdb
     import bentoml
     model = load_model(model_name='surface', version=2)
-    bentoml.pytorch.save_model("surface_clf", model)
+
+    for param in model.parameters():
+        param.requires_grad = False
+
+    # bentoml.pytorch.save_model("surface_clf", model)
 
     # sample = torch.rand((1, 3, 224, 224))
     # output = model(sample)
