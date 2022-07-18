@@ -8,7 +8,7 @@ def preprocess_op(pvc_name, volume_name, volume_mount_path):
 
     return dsl.ContainerOp(
         name='Preprocess Data',
-        image='tjems6498/surface_pipeline_preprocess:2',
+        image='tjems6498/surface_pipeline_preprocess:1',
         arguments=['--data-path', volume_mount_path,
                    '--img-size', 224],
     ).apply(onprem.mount_pvc(pvc_name, volume_name=volume_name, volume_mount_path=volume_mount_path))
@@ -17,7 +17,7 @@ def hyp_op(pvc_name, volume_name, volume_mount_path, count, device):
 
     return dsl.ContainerOp(
         name='Hyperparameter Tuning',
-        image='tjems6498/surface_pipeline_hyper:3',
+        image='tjems6498/surface_pipeline_hyper:1',
         arguments=['--data-path', volume_mount_path,
                     '--count', count,
                     '--device', device],
@@ -30,7 +30,7 @@ def train_op(pvc_name, volume_name, volume_mount_path, repo_name, epoch, img_siz
 
     return dsl.ContainerOp(
         name='Train Model',
-        image='tjems6498/surface_pipeline_train:9',
+        image='tjems6498/surface_pipeline_train:1',
         arguments=['--data-path', volume_mount_path,
                     '--repo-name', repo_name,
                     '--epoch', epoch,
@@ -48,7 +48,7 @@ def test_op(pvc_name, volume_name, volume_mount_path, img_size, batch_size, mode
 
     return dsl.ContainerOp(
         name='Test Model',
-        image='tjems6498/surface_pipeline_test:10',
+        image='tjems6498/surface_pipeline_test:1',
         arguments=['--data-path', volume_mount_path,
                    '--img-size', img_size,
                    '--batch-size', batch_size,
@@ -64,7 +64,7 @@ def serve_op(model_name, model_version, api_token):
 
     return dsl.ContainerOp(
         name='Bento packing',
-        image='tjems6498/surface_pipeline_serve:49',
+        image='tjems6498/surface_pipeline_serve:1',
         arguments=['--model-name', model_name,
                    '--model-version', model_version,
                    '--api-token', api_token],
