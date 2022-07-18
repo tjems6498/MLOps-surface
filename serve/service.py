@@ -15,7 +15,7 @@ SURFACE_CLASSES = ['negatieve', 'positive']
 
 surface_clf_runner = bentoml.pytorch.get("surface_classifier:latest").to_runner()
 
-svc = bentoml.Service("surface_convnext2", runners=[surface_clf_runner])
+svc = bentoml.Service("surface_convnext", runners=[surface_clf_runner])
 
 @svc.api(input=Image(), output=NumpyNdarray())
 def classify(imgs):

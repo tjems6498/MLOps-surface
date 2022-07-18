@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:latest
+FROM tjems6498/surface_pipeline_base:1 AS builder
 
 RUN apt-get -y update && apt-get install -y libzbar-dev
 RUN apt install -y netcat
